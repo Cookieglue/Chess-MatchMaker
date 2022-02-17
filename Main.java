@@ -32,20 +32,18 @@ class Main {
             //for players
             for (int n = 0 ; n < playerNum ; n++){
                 
+                Player self = teams[i][n];
                 Player opponent = teams[(i+1)%2][n];
-                //Set "Home" match
-                teams[i][n].setMatch(opponent, 0);
-                //Set "Away" match
-                opponent.setMatch(teams[i][n], 0);
-
-
-                System.out.println( teams[i][n].name + " VS " + teams[i][n].matches[0].name );
-                //for matches
-                /** 
-                while (teams[i].matches.length < matchNum){
-                    teams[i].setMatch(opponent, index);
+                
+                if (self.matches[0] == null && opponent.matches[0] == null){
+                    //Set "Home" match
+                    self.setMatch(opponent, 0);
+                    //Set "Away" match
+                    opponent.setMatch(self, 0);
+                    //for matches
+                    System.out.println( self.name + " VS " + self.matches[0].name );
                 }
-                **/
+        
 
             }
         }
