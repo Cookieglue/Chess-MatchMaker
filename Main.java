@@ -66,6 +66,7 @@ class Main {
 
   public Player getOpponent(int matchNum, int team){
     for (int op = 0 ; op < playerNum ; op++){
+    
       
       Player opponent = teams[(op)%teams.length][n];
       //ensure that the opponent is free and is not on the same team
