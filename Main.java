@@ -1,5 +1,7 @@
-class Main {
+import java.util.Random;
 
+class Main {
+    static Random rand = new Random();
     static Player[] holliston = {
       new Player("Adam",1),
       new Player("Sai",2),
@@ -38,19 +40,17 @@ class Main {
 
       //for matches
       for (int m = 0 ; m < matchNum ; m++){
-          //for teams
-          for(int i = 0 ; i < teams.length ; i++){
-              //for players
-              for (int n = 0 ; n < playerNum ; n++){
+        //for rank in team
+        for (int n = 0 ; n < playerNum ; n++){
+            //for teams
+            for(int i = 0 ; i < teams.length ; i++){
                   
                 Player self = teams[i][n];
 
                 if (self.matches[m] == null){
-                    Player opponent = getOpponent(matchNum, i);
+                    Player opponent = getOpponent(m, i, self);
                     //Set "Home" match
                     self.setMatch(opponent, m);
-                    //Set "Away" match
-                    opponent.setMatch(self, m);
                     System.out.println("MATCH " + m + " " + self.name + " VS " + opponent.name);
                 }
   
@@ -59,22 +59,28 @@ class Main {
         }
     }
 
-  public static Player getOpponent(int matchNum, int playerTeam){
+  public static Player getOpponent(int matchNum, int playerTeam, Player self){
     
     Player opponent = new Player("No Match Found", 0);
 
     //cycle through players || strongest players are always prioritized
-    for(int opponentRank = 0; opponentRank < holliston.length; opponentRank--){
+    for(int opponentRank = 0; opponentRank < holliston.length; opponentRank++){
+
+        int arrayShift = rand.nextInt(teams.length);
 
         //cycle through teams
-        for (int opponentTeam = 0 ; opponentTeam < teams.length ; opponentTeam++){
+        for (int opponentTeamCount = 0 ; opponentTeamCount < teams.length ; opponentTeamCount++){
 
             //skip the players team to avoid self matching
-            //if(opponentTeam == playerTeam) opponentTeam++;
+            int opponentTeam = (opponentTeamCount+arrayShift)%teams.length; 
+            if(opponentTeam == playerTeam) opponentTeamCount++;
+            opponentTeam = (opponentTeamCount+arrayShift)%teams.length; 
 
             //ensure that the opponent is free during that match
             if (teams[opponentTeam][opponentRank].matches[matchNum] == null){
                 opponent = teams[opponentTeam][opponentRank];
+                //Set "Away" match
+                opponent.setMatch(self, matchNum);
                 return opponent;
             }
 
