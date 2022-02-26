@@ -27,14 +27,14 @@ class Main {
           new Player("Marco",6),
           new Player("not mari",7),   
       };
-    
+    public static Player[][] teams;
     public static void main(String[] args) {
-        
-        Player[][] teams = {holliston, franklin, medway};
-        matchPlayers(teams, 7, 2);
+
+        teams = new Player[][]{holliston, franklin, medway};
+        matchPlayers(7, 2);
       
     }
-    public static void matchPlayers(Player[][] teams, int playerNum, int matchNum){
+    public static void matchPlayers(int playerNum, int matchNum){
 
       //for matches
       for (int m = 0 ; m < matchNum ; m++){
@@ -45,18 +45,13 @@ class Main {
                   
                 Player self = teams[i][n];
 
-                //for opponent teams
-                for (int op = 0 ; op < playerNum ; op++){
-                  Player opponent = teams[(op)%teams.length][n];
-                  
-                  if (self.matches[m] == null && opponent.matches[m] == null){
-                      //Set "Home" match
-                      self.setMatch(opponent, m);
-                      //Set "Away" match
-                      opponent.setMatch(self, m);
-                      //for matches
-                      System.out.println( self.name + " VS " + self.matches[0].name );
-                  }
+                if (self.matches[m] == null){
+                    Player opponent = getOpponent(matchNum, i);
+                    //Set "Home" match
+                    self.setMatch(opponent, m);
+                    //Set "Away" match
+                    opponent.setMatch(self, m);
+                    System.out.println("MATCH " + m + " " + self.name + " VS " + opponent.name);
                 }
   
               }
@@ -64,17 +59,30 @@ class Main {
         }
     }
 
-  public Player getOpponent(int matchNum, int team){
-    for (int op = 0 ; op < playerNum ; op++){
+  public static Player getOpponent(int matchNum, int playerTeam){
     
+    Player opponent = new Player("No Match Found", 0);
+
+    //cycle through players || strongest players are always prioritized
+    for(int opponentRank = 0; opponentRank < holliston.length; opponentRank--){
+
+        //cycle through teams
+        for (int opponentTeam = 0 ; opponentTeam < teams.length ; opponentTeam++){
+
+            //skip the players team to avoid self matching
+            //if(opponentTeam == playerTeam) opponentTeam++;
+
+            //ensure that the opponent is free during that match
+            if (teams[opponentTeam][opponentRank].matches[matchNum] == null){
+                opponent = teams[opponentTeam][opponentRank];
+                return opponent;
+            }
+
+        }
       
-      Player opponent = teams[(op)%teams.length][n];
-      //ensure that the opponent is free and is not on the same team
-      if (opponent.matches[matchNum] == null, ){
-        
-      }
       
     }
+    return opponent;
   }
     
   }
